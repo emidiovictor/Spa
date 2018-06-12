@@ -1,0 +1,52 @@
+﻿@model IEnumerable<InfraData.ViewModels.FornecedorViewModel>
+
+@{
+    ViewBag.Title = "Lista de Fornecedores";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Criar Novo", "Create")
+</p>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.RazaoSocial)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NomeFantasia)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CNPJ)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.RazaoSocial)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NomeFantasia)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CNPJ)
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", "Fornecedor", new {id = item.Id})" class="btn btn-warning">
+                <span title="Editar" class="glyphicon glyphicon-pencil"></span>
+            </a>
+            <a href="@Url.Action("Details", "Fornecedor", new {id = item.Id})" class="btn btn-primary">
+                <span title="Detalhes" class="glyphicon glyphicon-search"></span>
+            </a>
+
+            <a href="@Url.Action("Delete", "Fornecedor", new {id = item.Id})" class="btn btn-danger">
+                <span title="Excluir" class="glyphicon glyphicon-trash"></span>
+            </a>
+        </td>
+    </tr>
+}
+
+</table>

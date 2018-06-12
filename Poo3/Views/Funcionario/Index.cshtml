@@ -1,0 +1,82 @@
+﻿@model IEnumerable<InfraData.ViewModels.FuncionarioViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Criar Novo", "Create")
+</p>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CPF)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataNascimento)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Excluido)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comissao)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataAdmissao)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsAtivo)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nome)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CPF)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DataNascimento)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Excluido)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comissao)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DataAdmissao)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.IsAtivo)
+        </td>
+        <td>
+            <a href="@Url.Action("Edit", "Funcionario", new {id = item.Id})" class="btn btn-warning">
+                <span title="Editar" class="glyphicon glyphicon-pencil"></span>
+            </a>
+            <a href="@Url.Action("Details", "Funcionario", new {id = item.Id})" class="btn btn-primary">
+                <span title="Detalhes" class="glyphicon glyphicon-search"></span>
+            </a>
+
+            <a href="@Url.Action("Delete", "Funcionario", new {id = item.Id})" class="btn btn-danger">
+                <span title="Excluir" class="glyphicon glyphicon-trash"></span>
+            </a>
+        </td>
+    </tr>
+}
+
+</table>

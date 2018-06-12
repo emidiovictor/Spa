@@ -1,0 +1,58 @@
+﻿@model IEnumerable<InfraData.ViewModels.ClienteViewModel>
+
+@{
+    ViewBag.Title = "Lista de Clientes";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Criar Novo", "Create")
+</p>
+<table class="table table-striped">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nome)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CPF)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DataNascimento)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CPF)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DataNascimento)
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "Cliente", new {id = item.Id})" class="btn btn-warning">
+                    <span title="Editar" class="glyphicon glyphicon-pencil"></span>
+                </a>
+                <a href="@Url.Action("Details", "Cliente", new {id = item.Id})" class="btn btn-primary">
+                    <span title="Detalhes" class="glyphicon glyphicon-search"></span>
+                </a>
+
+                <a href="@Url.Action("Delete", "Cliente", new {id = item.Id})" class="btn btn-danger">
+                    <span title="Excluir" class="glyphicon glyphicon-trash"></span>
+                </a>
+                
+        </tr>
+    }
+</table>

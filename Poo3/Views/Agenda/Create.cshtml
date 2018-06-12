@@ -1,0 +1,80 @@
+﻿@model  InfraData.ViewModels.AgendaViewModel
+@using InfraData.ViewModels
+@{
+    var listServico = new List<ServicoViewModel>();
+}
+
+
+<h2>Criar Compromisso</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Dados Agenda</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Data, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Data, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Data, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Cliente</label>
+            <div class="col-md-10">
+                @Html.DropDownList("ClienteID", null, htmlAttributes: new { @required = "required", @class = "form-control" })
+
+                <button id="botao">Botao</button>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2">Cliente</label>
+            <div class="col-md-10">
+                @Html.DropDownList("ServicoID", null, htmlAttributes: new { @required = "required", @class = "form-control servico" })
+
+                <button class="btn btn-default action" id="submit2">Submit</button>
+
+            </div>
+        </div>
+        <br />
+        <h4>Servicos</h4>
+        <div id="partial">
+            @Html.Partial("_Servico", new List<ServicoViewModel>())
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Voltara para lista", "Index")
+</div>
+<script>
+
+    $(document).ready(function () {
+        $("#submit2").click(function (e) {
+            e.preventDefault();
+            var servicoid = $(".servico").val()
+            if (servicoid) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Agenda/GetData",
+                    data:
+                        JSON.stringify(servicoid),
+
+                    dataType: 'json'
+                })
+            }
+        })
+    }
+    )
+
+</script>
