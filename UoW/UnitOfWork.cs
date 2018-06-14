@@ -20,10 +20,8 @@ namespace UoW
             return _dbContext.SaveChanges();
 
         }
-        public void Dispose()
-        {
-            _dbContext.Dispose();
-        }
+
+        public void Dispose() => _dbContext.Dispose();
     }
 }
 

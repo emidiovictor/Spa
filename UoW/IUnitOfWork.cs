@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UoW
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork :IDisposable
     {
         int Commit();
     }
