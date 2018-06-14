@@ -46,12 +46,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppService\AppServiceBase.cs" />
+    <Compile Include="AppService\ClienteAppSerivce.cs" />
+    <Compile Include="AppService\FornecedorAppService.cs" />
     <Compile Include="AppService\FuncionarioAppService.cs" />
+    <Compile Include="AppService\SalaoAppService.cs" />
     <Compile Include="AutoMapper\AutoMapperConfig.cs" />
     <Compile Include="AutoMapper\DomainToViewModelMappingProfile.cs" />
     <Compile Include="AutoMapper\ViewModelToDomainMappingProfile.cs" />
     <Compile Include="Interfaces\IAppServiceBase.cs" />
+    <Compile Include="Interfaces\IClienteAppSerivce.cs" />
+    <Compile Include="Interfaces\IFornecedorAppService.cs" />
     <Compile Include="Interfaces\IFuncionarioAppService.cs" />
+    <Compile Include="Interfaces\ISalaoAppService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
