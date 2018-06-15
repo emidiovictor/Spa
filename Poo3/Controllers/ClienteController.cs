@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using Aplication.Interfaces;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Interfaces;
@@ -15,22 +16,16 @@ namespace Poo3.Controllers
 {
     public class ClienteController : Controller
     {
-        private readonly IClienteRepository _repository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly Context _context;
-        
-        public ClienteController()
+        private readonly IClienteAppSerivce _appService;
+        public ClienteController(IClienteAppSerivce clienteAppSerivce)
         {
-            _context = new Context();
-            _unitOfWork = new UnitOfWork(_context);
-            _repository = new ClienteRepository(_context);
+            _appService = clienteAppSerivce;
         }
         // GET: Cliente
         public ActionResult Index()
 
         {
-            var clienteViewModel = Mapper.Map<IEnumerable<ClienteViewModel>>(_repository.GetAll());
-            return View(clienteViewModel.ToList());
+            return View(_appService);
         }
 
         // GET: Cliente/Details/5
@@ -40,8 +35,8 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var cliente = _repository.Get(id);
-            var clienteViewModel = Mapper.Map<ClienteViewModel>(cliente);
+
+            var clienteViewModel = _appService.Get(id);
             if (clienteViewModel == null)
             {
                 return HttpNotFound();
@@ -59,11 +54,7 @@ namespace Poo3.Controllers
         {
             if (ModelState.IsValid)
             {
-                var cliente = Mapper.Map<Clientes>(clienteViewModel);
-                cliente.Id = Guid.NewGuid();
-                cliente.Endereco.Id = Guid.NewGuid();
-                _repository.Add(cliente);
-                _unitOfWork.Commit();
+                _appService.Add(clienteViewModel);
                 return RedirectToAction("Index");
             }
 
@@ -76,8 +67,7 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var cliente = _repository.GetClienteEndereco(id);
-            var clienteViewModel = Mapper.Map<ClienteViewModel>(cliente);
+            var clienteViewModel = _appService.Get(id);
             if (clienteViewModel == null)
             {
                 return HttpNotFound();
@@ -92,15 +82,7 @@ namespace Poo3.Controllers
             if (ModelState.IsValid)
             {
 
-                var cliente = Mapper.Map<Clientes>(clienteViewModel);
-                var entry = _context.Entry(cliente);
-                var entry2 = _context.Entry(cliente.Endereco);
-
-                
-                _context.Set<Clientes>().Attach(cliente);
-                entry2.State = EntityState.Modified;
-                entry.State = EntityState.Modified;
-                _unitOfWork.Commit();
+                _appService.Update(clienteViewModel);
                 return RedirectToAction("Index");
             }
             return View(clienteViewModel);
@@ -114,7 +96,7 @@ namespace Poo3.Controllers
             }
 
 
-            var clienteViewModel = Mapper.Map<ClienteViewModel>(_repository.Get(id));
+            var clienteViewModel = _appService.Get(id);
             if (clienteViewModel == null)
             {
                 return HttpNotFound();
@@ -127,10 +109,7 @@ namespace Poo3.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(Guid id)
         {
-
-            var cliente = _repository.Get(id);
-            _repository.Remove(cliente);
-            _unitOfWork.Commit();
+            _appService.Delete(id);
             return RedirectToAction("Index");
 
         }
@@ -139,7 +118,7 @@ namespace Poo3.Controllers
         {
             if (disposing)
             {
-                _context.Dispose();
+                _appService.Dispose();
             }
             base.Dispose(disposing);
         }

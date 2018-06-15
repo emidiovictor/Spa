@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Aplication.Interfaces;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Interfaces;
@@ -17,22 +18,19 @@ namespace Poo3.Controllers
 {
     public class SalaoController : Controller
     {
-        private readonly ISalaoRepository _repository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly Context _context;
+        private readonly ISalaoAppService _appService;
 
-        public SalaoController()
+    
+        public SalaoController(ISalaoAppService salaoAppService)
         {
-            _context = new Context();
-            _unitOfWork = new UnitOfWork(_context);
-            _repository = new SalaoRepository(_context);
+            _appService = salaoAppService;        
         }
         // GET: SalaoViewModels
         public ActionResult Index()
 
         {
-            var SalaoViewModel = Mapper.Map<IEnumerable<SalaoViewModel>>(_repository.GetAll());
-            return View(SalaoViewModel.ToList());
+            var salaoViewModel = _appService.GetAll();
+            return View(salaoViewModel.ToList());
         }
 
         // GET: SalaoViewModels/Details/5
@@ -42,13 +40,12 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var Salao = _repository.Get(id);
-            var SalaoViewModel = Mapper.Map<SalaoViewModel>(Salao);
-            if (SalaoViewModel == null)
+            var salaoViewModel = _appService.Get(id);
+            if (salaoViewModel == null)
             {
                 return HttpNotFound();
             }
-            return View(SalaoViewModel);
+            return View(salaoViewModel);
         }
 
         public ActionResult Create()
@@ -61,11 +58,7 @@ namespace Poo3.Controllers
         {
             if (ModelState.IsValid)
             {
-                var salao = Mapper.Map<Salao>(salaoViewModel);
-                salao.Id = Guid.NewGuid();
-                salao.Endereco.Id = Guid.NewGuid();
-                _repository.Add(salao);
-                _unitOfWork.Commit();
+                _appService.Update(salaoViewModel);
                 return RedirectToAction("Index");
             }
 
@@ -78,8 +71,7 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var salao = _repository.GetSalaoEndereco(id);
-            var salaoViewModel = Mapper.Map<SalaoViewModel>(salao);
+            var salaoViewModel = _appService.Get(id);
             if (salaoViewModel == null)
             {
                 return HttpNotFound();
@@ -87,7 +79,6 @@ namespace Poo3.Controllers
             return View(salaoViewModel);
         }
 
-#warning edit não funciona
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(SalaoViewModel salaoViewModel)
@@ -95,11 +86,7 @@ namespace Poo3.Controllers
             if (ModelState.IsValid)
             {
 
-                var salao = Mapper.Map<Salao>(salaoViewModel);
-                var entry = _context.Entry(salao);
-                _context.Set<Salao>().Attach(salao);
-                entry.State = EntityState.Modified;
-                _unitOfWork.Commit();
+                _appService.UpdateSalaoEndereco(salaoViewModel);
                 return RedirectToAction("Index");
             }
             return View(salaoViewModel);
@@ -111,7 +98,7 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var salaoViewModel = Mapper.Map<SalaoViewModel>(_repository.Get(id));
+            var salaoViewModel = _appService.Get(id);
             if (salaoViewModel == null)
             {
                 return HttpNotFound();
@@ -126,9 +113,7 @@ namespace Poo3.Controllers
         {
             try
             {
-                var salao = _repository.Get(id);
-                _repository.Remove(salao);
-                _unitOfWork.Commit();
+                _appService.Delete(id);
                 return RedirectToAction("Index");
 
 
@@ -143,7 +128,7 @@ namespace Poo3.Controllers
         {
             if (disposing)
             {
-                _context.Dispose();
+                _appService.Dispose();
             }
             base.Dispose(disposing);
         }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Aplication.Interfaces;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Interfaces;
@@ -18,22 +19,18 @@ namespace Poo3.Controllers
     public class ProdutoController : Controller
     {
 
-        private readonly IProdutoRepository _repository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly Context _context;
 
-        public ProdutoController()
+        private readonly IProdutoAppService _appService;
+
+        public ProdutoController(IProdutoAppService appService)
         {
-            _context = new Context();
-            _unitOfWork = new UnitOfWork(_context);
-            _repository = new ProdutoRepository(_context);
+            _appService = appService;
         }
         // GET: ProdutoViewModels
         public ActionResult Index()
 
         {
-            var ProdutoViewModel = Mapper.Map<IEnumerable<ProdutoViewModel>>(_repository.GetAll());
-            return View(ProdutoViewModel.ToList());
+            return View(_appService.GetAll());
         }
 
         // GET: ProdutoViewModels/Details/5
@@ -43,13 +40,12 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var Produto = _repository.Get(id);
-            var ProdutoViewModel = Mapper.Map<ProdutoViewModel>(Produto);
-            if (ProdutoViewModel == null)
+            var produtoViewModel = _appService.Get(id);
+            if (produtoViewModel == null)
             {
                 return HttpNotFound();
             }
-            return View(ProdutoViewModel);
+            return View(produtoViewModel);
         }
 
         public ActionResult Create()
@@ -62,9 +58,7 @@ namespace Poo3.Controllers
         {
             if (ModelState.IsValid)
             {
-                var produto = Mapper.Map<Produto>(produtoViewModel);
-                _repository.Add(produto);
-                _unitOfWork.Commit();
+                _appService.Add(produtoViewModel);
                 return RedirectToAction("Index");
             }
 
@@ -77,8 +71,7 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var produto = _repository.Get(id);
-            var produtoViewModel = Mapper.Map<ProdutoViewModel>(produto);
+            var produtoViewModel = _appService.Get(id);
             if (produtoViewModel == null)
             {
                 return HttpNotFound();
@@ -93,23 +86,18 @@ namespace Poo3.Controllers
             if (ModelState.IsValid)
             {
 
-                var produto = Mapper.Map<Produto>(produtoViewModel);
-                var entry = _context.Entry(produto);
-                _context.Set<Produto>().Attach(produto);
-                entry.State = EntityState.Modified;
-                _unitOfWork.Commit();
+                _appService.Update(produtoViewModel);
                 return RedirectToAction("Index");
             }
             return View(produtoViewModel);
         }
-        // GET: ProdutoViewModels/Delete/5
         public ActionResult Delete(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var produtoViewModel = _repository.Get(id);
+            var produtoViewModel = _appService.Get(id);
             if (produtoViewModel == null)
             {
                 return HttpNotFound();
@@ -124,9 +112,7 @@ namespace Poo3.Controllers
         {
             try
             {
-                var produto = _repository.Get(id);
-                _repository.Remove(produto);
-                _unitOfWork.Commit();
+                _appService.Delete(id);
                 return RedirectToAction("Index");
 
 
@@ -141,7 +127,7 @@ namespace Poo3.Controllers
         {
             if (disposing)
             {
-                _context.Dispose();
+                _appService.Dispose();
             }
             base.Dispose(disposing);
         }

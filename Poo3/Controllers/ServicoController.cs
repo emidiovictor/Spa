@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Aplication.Interfaces;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Interfaces;
@@ -17,23 +18,17 @@ namespace Poo3.Controllers
 {
     public class ServicoController : Controller
     {
+        private readonly IServicoAppService _appService;
+        public ServicoController(IServicoAppService appService)
 
-        private readonly IServicoRepository _repository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly Context _context;
-
-        public ServicoController()
         {
-            _context = new Context();
-            _unitOfWork = new UnitOfWork(_context);
-            _repository = new ServicoRepository(_context);
+            _appService = appService;
         }
         // GET: ServicoViewModels
         public ActionResult Index()
 
         {
-            var ServicoViewModel = Mapper.Map<IEnumerable<ServicoViewModel>>(_repository.GetAll());
-            return View(ServicoViewModel.ToList());
+            return View(_appService);
         }
 
         // GET: ServicoViewModels/Details/5
@@ -43,13 +38,12 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var Servico = _repository.Get(id);
-            var ServicoViewModel = Mapper.Map<ServicoViewModel>(Servico);
-            if (ServicoViewModel == null)
+            var servicoViewModel = _appService.Get(id);
+            if (servicoViewModel == null)
             {
                 return HttpNotFound();
             }
-            return View(ServicoViewModel);
+            return View(servicoViewModel);
         }
 
         public ActionResult Create()
@@ -62,9 +56,7 @@ namespace Poo3.Controllers
         {
             if (ModelState.IsValid)
             {
-                var servico = Mapper.Map<Servico>(servicoViewModel);
-                _repository.Add(servico);
-                _unitOfWork.Commit();
+                _appService.Add(servicoViewModel);
                 return RedirectToAction("Index");
             }
 
@@ -77,8 +69,7 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var servico = _repository.Get(id);
-            var servicoViewModel = Mapper.Map<ServicoViewModel>(servico);
+            var servicoViewModel = _appService.Get(id);
             if (servicoViewModel == null)
             {
                 return HttpNotFound();
@@ -93,11 +84,7 @@ namespace Poo3.Controllers
             if (ModelState.IsValid)
             {
 
-                var servico = Mapper.Map<Servico>(servicoViewModel);
-                var entry = _context.Entry(servico);
-                _context.Set<Servico>().Attach(servico);
-                entry.State = EntityState.Modified;
-                _unitOfWork.Commit();
+                _appService.Update(servicoViewModel);
                 return RedirectToAction("Index");
             }
             return View(servicoViewModel);
@@ -109,7 +96,7 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var servicoViewModel = _repository.Get(id);
+            var servicoViewModel = _appService.Get(id);
             if (servicoViewModel == null)
             {
                 return HttpNotFound();
@@ -124,9 +111,7 @@ namespace Poo3.Controllers
         {
             try
             {
-                var servico = _repository.Get(id);
-                _repository.Remove(servico);
-                _unitOfWork.Commit();
+                _appService.Delete(id);
                 return RedirectToAction("Index");
 
             }
@@ -140,7 +125,7 @@ namespace Poo3.Controllers
         {
             if (disposing)
             {
-                _context.Dispose();
+                _appService.Dispose();
             }
             base.Dispose(disposing);
         }

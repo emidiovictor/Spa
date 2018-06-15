@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Aplication.Interfaces;
 using AutoMapper;
 using Domain.Entity;
 using Domain.Interfaces;
@@ -19,23 +20,19 @@ namespace Poo3.Controllers
     public class FornecedorController : Controller
     {
 
+        private readonly IFornecedorAppService _appService;
+      
 
-        private readonly IFornecedorRepository _repository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly Context _context;
-
-        public FornecedorController()
+        public FornecedorController(IFornecedorAppService appService)
         {
-            _context = new Context();
-            _unitOfWork = new UnitOfWork(_context);
-            _repository = new FornecedorRepository(_context);
+            _appService = appService;
         }
         // GET: FornecedorViewModels
         public ActionResult Index()
 
         {
-            var FornecedorViewModel = Mapper.Map<IEnumerable<FornecedorViewModel>>(_repository.GetAll());
-            return View(FornecedorViewModel.ToList());
+
+            return View(_appService.GetAll());
         }
 
         // GET: FornecedorViewModels/Details/5
@@ -45,13 +42,13 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var Fornecedor = _repository.Get(id);
-            var FornecedorViewModel = Mapper.Map<FornecedorViewModel>(Fornecedor);
-            if (FornecedorViewModel == null)
+
+            var fornecedorViewModel = _appService.Get(id);
+            if (fornecedorViewModel == null)
             {
                 return HttpNotFound();
             }
-            return View(FornecedorViewModel);
+            return View(fornecedorViewModel);
         }
 
         public ActionResult Create()
@@ -64,12 +61,7 @@ namespace Poo3.Controllers
         {
             if (ModelState.IsValid)
             {
-                var fornecedor = Mapper.Map<Fornecedor>(fornecedorViewModel);
-                fornecedor.Id = Guid.NewGuid();
-                fornecedor.Endereco.Id = Guid.NewGuid();
-
-                _repository.Add(fornecedor);
-                _unitOfWork.Commit();
+                _appService.Add(fornecedorViewModel);
                 return RedirectToAction("Index");
             }
 
@@ -82,8 +74,7 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var fornecedor = _repository.GetFornecedorEndereco(id);
-            var fornecedorViewModel = Mapper.Map<FornecedorViewModel>(fornecedor);
+            var fornecedorViewModel = _appService.Get(id);
             if (fornecedorViewModel == null)
             {
                 return HttpNotFound();
@@ -97,11 +88,7 @@ namespace Poo3.Controllers
         {
             if (ModelState.IsValid)
             {
-                var fornecedor = Mapper.Map<Fornecedor>(fornecedorViewModel);
-                var entry = _context.Entry(fornecedor);
-                _context.Set<Fornecedor>().Attach(fornecedor);
-                entry.State = EntityState.Modified;
-                _unitOfWork.Commit();
+                _appService.UpdateFornecedorEndereco(fornecedorViewModel);
                 return RedirectToAction("Index");
             }
             return View(fornecedorViewModel);
@@ -113,7 +100,7 @@ namespace Poo3.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var fornecedorViewModel = Mapper.Map<FornecedorViewModel>(_repository.Get(id));
+            var fornecedorViewModel = _appService.Get(id);
             if (fornecedorViewModel == null)
             {
                 return HttpNotFound();
@@ -128,9 +115,7 @@ namespace Poo3.Controllers
         {
             try
             {
-                var fornecedor = _repository.Get(id);
-                _repository.Remove(fornecedor);
-                _unitOfWork.Commit();
+                _appService.Delete(id);
                 return RedirectToAction("Index");
             }
             catch
@@ -143,7 +128,7 @@ namespace Poo3.Controllers
         {
             if (disposing)
             {
-                _context.Dispose();
+                _appService.Dispose();
             }
             base.Dispose(disposing);
         }
