@@ -11,5 +11,6 @@ namespace Aplication.Interfaces
     public interface IClienteAppSerivce : IAppServiceBase<Clientes, ClienteViewModel>
     {
         ClienteViewModel GetFuncionarioEndereco(Guid id);
+        void UpdateClienteEndereco(ClienteViewModel clienteViewModel);
     }
 }

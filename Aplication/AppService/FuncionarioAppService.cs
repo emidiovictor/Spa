@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using Aplication.Interfaces;
 using AutoMapper;
 using Domain.Entity;
@@ -20,6 +21,15 @@ namespace Aplication.AppService
         public FuncionarioViewModel GetFuncionarioEndereco(Guid? id)
         {
             return Mapper.Map<FuncionarioViewModel>(repository.GetFuncionarioEndereco(id));
+        }
+
+        public void UpdateFuncionarioEndereco(FuncionarioViewModel funcionarioViewModel)
+        {
+            var funcionario = Mapper.Map<Funcionario>(funcionarioViewModel);
+            _context.Set<Funcionario>().Attach(funcionario);
+            _context.Entry(funcionario).State = EntityState.Modified;
+            _context.Entry(funcionario.Endereco).State = EntityState.Modified;
+            _unitOfWork.Commit();
         }
     }
 }

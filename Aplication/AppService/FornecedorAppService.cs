@@ -1,9 +1,11 @@
 ﻿using Aplication.Interfaces;
+using AutoMapper;
 using Domain.Entity;
 using Domain.Interfaces;
 using InfraData.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,5 +22,13 @@ namespace Aplication.AppService
             _repository = repository;
         }
 
+        public void UpdateFornecedorEndereco(FornecedorViewModel fornecedorViewModel)
+        {
+            var fornecedor = Mapper.Map<Fornecedor>(fornecedorViewModel);
+            _context.Set<Fornecedor>().Attach(fornecedor);
+            _context.Entry(fornecedor).State = EntityState.Modified;
+            _context.Entry(fornecedor.Endereco).State = EntityState.Modified;
+            _unitOfWork.Commit();
+        }
     }
 }

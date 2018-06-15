@@ -14,9 +14,9 @@ namespace Aplication.AppService
         where TViewModelBase : ViewModelBase,new()
 
     {
-        private readonly IRepository<TEntity> _repository;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly Context _context;
+        protected readonly IRepository<TEntity> _repository;
+        protected readonly IUnitOfWork _unitOfWork;
+        protected readonly Context _context;
 
         public AppServiceBase(IRepository<TEntity> repository,
             IUnitOfWork unitOfWork, Context context)
