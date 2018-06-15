@@ -49,7 +49,9 @@
     <Compile Include="AppService\ClienteAppSerivce.cs" />
     <Compile Include="AppService\FornecedorAppService.cs" />
     <Compile Include="AppService\FuncionarioAppService.cs" />
+    <Compile Include="AppService\ProdutoAppSevice.cs" />
     <Compile Include="AppService\SalaoAppService.cs" />
+    <Compile Include="AppService\ServicoAppService.cs" />
     <Compile Include="AutoMapper\AutoMapperConfig.cs" />
     <Compile Include="AutoMapper\DomainToViewModelMappingProfile.cs" />
     <Compile Include="AutoMapper\ViewModelToDomainMappingProfile.cs" />
@@ -57,7 +59,9 @@
     <Compile Include="Interfaces\IClienteAppSerivce.cs" />
     <Compile Include="Interfaces\IFornecedorAppService.cs" />
     <Compile Include="Interfaces\IFuncionarioAppService.cs" />
+    <Compile Include="Interfaces\IProdutoAppService.cs" />
     <Compile Include="Interfaces\ISalaoAppService.cs" />
+    <Compile Include="Interfaces\IServicoAppService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
