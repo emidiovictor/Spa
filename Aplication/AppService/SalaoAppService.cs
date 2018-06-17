@@ -22,15 +22,20 @@ namespace Aplication.AppService
             _repository = repository;
         }
 
-        public void UpdateSalaoEndereco(SalaoViewModel salaoViewModel)
+        public override SalaoViewModel Get(Guid? id)
         {
-            var salao = Mapper.Map<Salao>(salaoViewModel);
+            return Mapper.Map<SalaoViewModel>(_repository.GetSalaoEndereco(id));
+        }
+
+        public override void Update(SalaoViewModel viewModel)
+        {
+            var salao = Mapper.Map<Salao>(viewModel);
             _context.Set<Salao>().Attach(salao);
             _context.Entry(salao).State = EntityState.Modified;
             _context.Entry(salao.Endereco).State = EntityState.Modified;
             _unitOfWork.Commit();
         }
-
+        
 
     }
 }

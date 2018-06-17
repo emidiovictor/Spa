@@ -88,7 +88,7 @@ namespace Poo3.Controllers
         {
             if (ModelState.IsValid)
             {
-                _appService.UpdateFornecedorEndereco(fornecedorViewModel);
+                _appService.Update(fornecedorViewModel);
                 return RedirectToAction("Index");
             }
             return View(fornecedorViewModel);

@@ -26,24 +26,24 @@ namespace Aplication.AppService
             _unitOfWork = unitOfWork;
         }
 
-        public ICollection<TViewModelBase> GetAll()
+        public virtual ICollection<TViewModelBase> GetAll()
         {
             return Mapper.Map<ICollection<TViewModelBase>>(_repository.GetAll());
         }
 
-        public TViewModelBase Get(Guid? id)
+        public virtual TViewModelBase Get(Guid? id)
         {
             return Mapper.Map<TViewModelBase>(_repository.Get(id));
         }
 
-        public void Add(TViewModelBase viewModel)
+        public virtual void Add(TViewModelBase viewModel)
         {
             var entity = Mapper.Map<TEntity>(viewModel);
             _repository.Add(entity);
             _unitOfWork.Commit();
         }
 
-        public void Update(TViewModelBase viewModel)
+        public virtual void Update(TViewModelBase viewModel)
         {
             var entity = Mapper.Map<TEntity>(viewModel);
             _repository.Add(entity);
@@ -52,7 +52,7 @@ namespace Aplication.AppService
             _unitOfWork.Commit();
         }
 
-        public void Delete(Guid? id)
+        public virtual void Delete(Guid? id)
         {
             var entity = Mapper.Map<TEntity>(_repository.Get(id));
             _repository.Remove(entity);
@@ -61,7 +61,7 @@ namespace Aplication.AppService
 
         public void Dispose()
         {
-#warning impementar dispoable;
+            _context.Dispose();
         }
 
        

@@ -22,9 +22,13 @@ namespace Aplication.AppService
             _repository = repository;
         }
 
-        public void UpdateFornecedorEndereco(FornecedorViewModel fornecedorViewModel)
+        public override FornecedorViewModel Get(Guid? id)
         {
-            var fornecedor = Mapper.Map<Fornecedor>(fornecedorViewModel);
+            return Mapper.Map<FornecedorViewModel > (_repository.GetFornecedorEndereco(id));
+        }
+        public override void Update(FornecedorViewModel viewModel)
+        {
+            var fornecedor = Mapper.Map<Fornecedor>(viewModel);
             _context.Set<Fornecedor>().Attach(fornecedor);
             _context.Entry(fornecedor).State = EntityState.Modified;
             _context.Entry(fornecedor.Endereco).State = EntityState.Modified;

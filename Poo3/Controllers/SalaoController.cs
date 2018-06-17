@@ -86,7 +86,7 @@ namespace Poo3.Controllers
             if (ModelState.IsValid)
             {
 
-                _appService.UpdateSalaoEndereco(salaoViewModel);
+                _appService.Update(salaoViewModel);
                 return RedirectToAction("Index");
             }
             return View(salaoViewModel);

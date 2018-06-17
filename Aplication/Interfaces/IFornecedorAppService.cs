@@ -11,7 +11,6 @@ namespace Aplication.Interfaces
 {
     public interface IFornecedorAppService : IAppServiceBase<Fornecedor,FornecedorViewModel>
     {
-         void UpdateFornecedorEndereco(FornecedorViewModel fornecedorViewModel);
 
     }
 }

@@ -10,7 +10,5 @@ namespace Aplication.Interfaces
 {
     public interface ISalaoAppService : IAppServiceBase<Salao, SalaoViewModel>
     {
-       void UpdateSalaoEndereco(SalaoViewModel salaoViewModel);
-
     }
 }

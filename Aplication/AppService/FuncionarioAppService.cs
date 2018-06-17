@@ -18,14 +18,13 @@ namespace Aplication.AppService
             this.repository = repository;
         }
 
-        public FuncionarioViewModel GetFuncionarioEndereco(Guid? id)
+        public override FuncionarioViewModel Get(Guid? id)
         {
             return Mapper.Map<FuncionarioViewModel>(repository.GetFuncionarioEndereco(id));
         }
-
-        public void UpdateFuncionarioEndereco(FuncionarioViewModel funcionarioViewModel)
+        public override void Update(FuncionarioViewModel viewModel)
         {
-            var funcionario = Mapper.Map<Funcionario>(funcionarioViewModel);
+            var funcionario = Mapper.Map<Funcionario>(viewModel);
             _context.Set<Funcionario>().Attach(funcionario);
             _context.Entry(funcionario).State = EntityState.Modified;
             _context.Entry(funcionario.Endereco).State = EntityState.Modified;

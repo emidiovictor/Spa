@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using Aplication.Interfaces;
-using AutoMapper;
-using Domain.Entity;
-using Domain.Interfaces;
-using InfraData.Repositories;
 using InfraData.ViewModels;
-using UoW;
 
 namespace Poo3.Controllers
 {

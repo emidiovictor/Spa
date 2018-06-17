@@ -15,16 +15,16 @@ namespace Aplication.AppService
 {
     public class ClienteAppSerivice : AppServiceBase<Clientes, ClienteViewModel>, IClienteAppSerivce
     {
-        protected readonly IClienteRepository _repository;
+        private readonly IClienteRepository _repository;
         public ClienteAppSerivice(IClienteRepository repository,
            IUnitOfWork unitOfWork, Context context) : base(repository, unitOfWork, context)
         {
             _repository = repository;
         }
 
-        public ClienteViewModel GetFuncionarioEndereco(Guid id)
+        public override ClienteViewModel Get(Guid? id)
         {
-            throw new NotImplementedException();
+            return Mapper.Map<ClienteViewModel>(_repository.GetClienteEndereco(id));
         }
 
         public void UpdateClienteEndereco(ClienteViewModel clienteViewModel)

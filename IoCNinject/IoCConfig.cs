@@ -36,12 +36,26 @@ namespace Poo3.App_Start
                 //Cria o Container 
                 IKernel kernel = new StandardKernel();
 
-                kernel.Bind<Context>().To<Context>();
+                /// Repository
                 kernel.Bind<IClienteRepository>().To<ClienteRepository>();
                 kernel.Bind<IFuncionarioRepository>().To<FuncionarioRespository>();
                 kernel.Bind<ISalaoRepository>().To<SalaoRepository>();
+                kernel.Bind<IProdutoRepository>().To<ProdutoRepository>();
+                kernel.Bind<IFornecedorRepository>().To<FornecedorRepository>();
+
+                /// APPSERVICE
+
                 kernel.Bind<IFuncionarioAppService>().To<FuncionarioAppService>();
-                kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
+                kernel.Bind<IClienteAppSerivce>().To<ClienteAppSerivice>();
+                kernel.Bind<ISalaoAppService>().To<SalaoAppSerivice>();
+                kernel.Bind<IProdutoAppService>().To<ProdutoAppSevice>();
+                kernel.Bind<IFornecedorAppService>().To<FornecedorAppSerivice>();
+
+
+                /// OTHERS
+                kernel.Bind<IUnitOfWork>().To<UnitOfWork>();;
+                kernel.Bind<Context>().To<Context>();;
+                
 
 
                 //Registra o container no ASP.NET
